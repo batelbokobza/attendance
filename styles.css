@@ -1,0 +1,95 @@
+table{
+        text-align:center;
+        font-size:100%;
+        color:CornflowerBlue;
+        width:95%;
+        height:170px;
+        margin: 0px auto;
+      }
+        tr:nth-of-type(2n){
+            background-color: rgba(176,196,222, 0.2);
+        }
+
+.dropdown{
+        font-size: 30px;
+    }
+
+ /* To Go Back button */
+.button {
+      border-radius: 4px;
+      background-color: #e7e7e7;  /* or 008CBA or DodgerBlue */
+      border: none;
+      color: white;
+      text-align: center;
+      font-size: 23px;
+      padding: 20px;
+      width: 180px;
+      height:70px;
+      transition: all 0.5s;
+      cursor: pointer;
+      margin: auto;
+
+      position:relative;
+      left:100px;
+    }
+    }
+.button span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+    }
+.button span:after {
+      content: '\00bb';
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      right: -20px;
+      transition: 0.5s;
+}
+
+.button:hover span {
+      padding-right: 25px;
+}
+
+.button:hover span:after {
+      opacity: 1;
+      right: 0;
+}
+
+.table-header{
+    cursor: pointer;
+}
+
+         /* To Download and Home button */
+.btn {
+      background-color: DodgerBlue;
+      border: none;
+      color: white;
+      padding: 10px 10px;
+      cursor: pointer;
+      font-size: 20px;
+
+      position:relative;
+      left:30px;
+}
+
+.btn:hover {
+      background-color: RoyalBlue;
+}
+
+.custom-table-header{
+        font-weight: bold;
+        font-size:120%;
+        background-color: rgba(176,196,222, 0.2);
+        text-decoration: underline;
+}
+
+.title{
+    text-align:center;
+    font-size:350%;
+    color:RoyalBlue;
+    font-weight: bold;
+    text-decoration: underline;
+    font-style: italic;
+}

@@ -1,0 +1,17 @@
+FROM python:3.7-slim
+
+WORKDIR /Attendance
+# Define the working directory of a Docker container.
+
+COPY requirements.txt requirements.txt
+# To get our requirements.txt file into our image.
+COPY . /CopyAttendance
+# Copy all files from directory to CopyAttendance directory
+
+RUN pip install -r requirements.txt
+# Install all the packages from requirements.
+
+EXPOSE 5000
+
+CMD [ "python3", "session.py" ]
+# The session file runs the application.

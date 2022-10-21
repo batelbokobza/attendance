@@ -1,0 +1,340 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+
+<head>
+    <!-- To the date range -->
+    <link rel="stylesheet" href="../assets/vendor/daterangepicker/daterangepicker.css">
+    <script src="../assets/vendor/daterangepicker/moment.min.js"></script>
+    <script src="../assets/vendor/daterangepicker/daterangepicker.js"></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script>
+    <link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css'
+          rel='stylesheet'>
+    <link type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+
+
+
+    <style type="text/css">
+
+       body {
+           text-align: center;
+           background-color: lightgray;
+       }
+
+        /* Style the search field */
+        form.example input[type=text] {
+          padding: 10px;
+          font-size: 20px;
+          border: 2px solid grey;
+          float: left;
+          width: 100%;
+          background: #f1f1f1;
+        }
+
+        .connection-type{
+            font-size: 35px;
+        }
+
+        .button-submit {
+          background-color: lightgray;
+          font-size: 30px;
+          font-weight: bold;
+          border: none;
+          color: DodgerBlue;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+        }
+
+        /* Style the submit button */
+        form.example button {
+          float: left;
+          padding: 20px;
+          background: #2196F3;
+          color: white;
+          border: 1px solid grey;
+          border-left: none; /* Prevent double borders */
+          cursor: pointer;
+        }
+        form.example button:hover {
+          background: #0b7dda;
+        }
+        form.example::after {
+          content: "";
+          clear: both;
+          display: table;
+        }
+            /* To Download and Home button */
+        .btn {
+          background-color: DodgerBlue;
+          border: none;
+          color: white;
+          padding: 8px 20px;
+          cursor: pointer;
+          font-size: 20px;
+        }
+        .btn:hover {
+          background-color: RoyalBlue;
+        }
+
+
+    .button-show-data{
+        border-radius: 8px;
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        font-size: 25px;
+        padding: 15px;
+        cursor: pointer;
+        margin: auto;
+        }
+
+         /* To Go Back button */
+    .button {
+          border-radius: 4px;
+          background-color: #e7e7e7;  /* or 008CBA or DodgerBlue */
+          border: none;
+          color: Black;
+          text-align: center;
+          font-size: 23px;
+          padding: 20px;
+          width: 180px;
+          height:70px;
+          transition: all 0.5s;
+          cursor: pointer;
+          margin: auto;
+        }
+        .button span {
+          cursor: pointer;
+          display: inline-block;
+          position: relative;
+          transition: 0.5s;
+        }
+        .button span:after {
+          content: '\00bb';
+          position: absolute;
+          opacity: 0;
+          top: 0;
+          right: -20px;
+          transition: 0.5s;
+        }
+        .button:hover span {
+          padding-right: 25px;
+        }
+        .button:hover span:after {
+          opacity: 1;
+          right: 0;
+        }
+
+        .left-item{
+            width: 200px;
+            height:200px;
+            font-size:350%;
+        }
+
+        .open>.dropdown-menu {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            height:240px;
+            font-size: 20px;
+            position: unset !important;
+            padding: 2px 0px;
+        }
+        .dropdown{
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 8px 20px;
+        }
+        .date-picker{
+        display: inline-flex;
+        justify-content: space-evenly;
+        align-content: stretch;
+        justify-items: center;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        }
+
+        .hidden-input-option {
+            display: none !important;
+        }
+
+        #input-option-name {
+            margin-top: 30px;
+        }
+
+        #input-option-date-picker {
+            display: flex;
+            margin-top: 20px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #input-option-date-picker input {
+            margin-bottom: 15px;
+        }
+
+        #input-option-connection-type input {
+            margin-bottom: 15px;
+        }
+
+        .error-message-hidden {
+            display: none;
+        }
+
+        #error-message {
+            color: red;
+        }
+
+
+    </style>
+
+    <script>
+        const INPUT_OPTIONS_IDS = ['input-option-name', 'input-option-date-picker', 'input-option-email', 'input-option-connection-type']
+        function onNameSelect() {
+            document.getElementById('input-option-name').classList.remove('hidden-input-option');
+        }
+        function onDateSelected() {
+            const x = document.getElementById('input-option-date-picker').classList.remove('hidden-input-option');
+        }
+        function onEmailSelected() {
+            const x = document.getElementById('input-option-email').classList.remove('hidden-input-option');
+        }
+        function onConnectionTypeSelected() {
+            document.getElementById('input-option-connection-type').classList.remove('hidden-input-option');
+        }
+
+        function onAllDataSelected(dateType) {
+            let newURL = new URL(window.location.href);
+            newURL.searchParams.append(dateType, 'true');
+            window.location.href = newURL.origin + '/table' + newURL.search;
+        }
+
+        function onSelect(itemName) {
+            INPUT_OPTIONS_IDS.forEach(id => {
+                document.getElementById(id).classList.add('hidden-input-option');
+            });
+            if(itemName === 'name') {
+                onNameSelect();
+            } else if(itemName === 'date') {
+                onDateSelected();
+            } else if(itemName === 'email') {
+                onEmailSelected();
+            } else if(itemName === 'connectionType') {
+                onConnectionTypeSelected();
+            }else if(itemName === 'allParticipantsData') {
+                onAllDataSelected('allParticipantsData');
+            }else if(itemName === 'allMeetingsData') {
+                onAllDataSelected('allMeetingsData');
+            }
+        }
+    </script>
+
+    <script>
+        function validateForm(selectedField) {
+            if (selectedField == 'Date'){
+                    var from_date = document.forms["inputDateForm"]["formDatePicker"].value;
+                    var to_date = document.forms["inputDateForm"]["toDatePicker"].value;
+                    if (from_date > to_date) {
+                        alert("Error: \nThe date range is invalid. \nThe start date must be before or the same as the end date.");
+                        return false;
+                    }
+            } else{
+                if (selectedField == 'Name'){
+                var input_field = document.forms["inputNameForm"]["name_search"].value;
+                msg_error = "Error: \nName field must be filled out."
+                }
+                else if (selectedField == 'Email'){
+                var input_field = document.forms["inputEmailForm"]["email_search"].value;
+                msg_error = "Error: \nEmail field must be filled out."
+                }
+                if (input_field == "" || input_field == null) {
+                    alert(msg_error);
+                    return false;
+                }
+
+             }
+        }
+    </script>
+
+    <div class="container" style="text-align:center;">
+        <br><h1 style="text-align:center; font-size:350%; color:RoyalBlue;"><strong><ins><i>Attendance Data</i></ins></strong></h1>
+        <hr>
+
+        <div class="row" style="text-align:center;">
+            <br><br><br><br>
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="font-size: 30px;">
+                        View By <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li style="font-size: 20px"><a href="#" onclick="onSelect('name')">Name</a></li>
+                        <li style="font-size: 20px" onclick="onSelect('date')"><a href="#">Date</a></li>
+                        <li style="font-size: 20px" onclick="onSelect('email')"><a href="#">Email</a></li>
+                        <li style="font-size: 20px" onclick="onSelect('connectionType')"><a href="#" >Connection Type</a></li>
+                        <li class="divider" style="border-top: 3px dotted gainsboro;"></li>
+                        <li style="font-size: 20px"><a href="#" onclick="onSelect('allParticipantsData')">Participants Attendance Data</a></li>
+                        <li style="font-size: 20px"><a href="#" onclick="onSelect('allMeetingsData')">All Meetings Data</a></li>
+                    </ul>
+                </div>
+        </div>
+
+        <div id="input-option-name" class="form-group col-md-15 hidden-input-option" style="text-align:center; font-size:200%;">
+            <form class="form-group col-md-15"  name="inputNameForm" action="table" onsubmit="return validateForm('Name')">
+                <h2 style="text-align:center; color:SteelBlue; font-size: 40px">
+                    <strong>Enter the student's name to display their attendance details.</strong></h2><hr>
+                <input type="text" placeholder="Enter Name" name="name_search" style="font-size:35px">
+                <button type="submit" style="color:SteelBlue; font-size: 35px"><i class="fa fa-search"></i></button>
+                </form>
+        </div>
+
+        <div id="input-option-date-picker" class="date-Picker hidden-input-option">
+            <form class="form-group col-md-15" name="inputDateForm" action="table"
+                  onsubmit="return validateForm('Date')" style="font-size: 35px">
+                <h2 style="text-align:center; color:SteelBlue; font-size: 40px">
+                    <strong>Enter the requested date range.</strong></h2><hr>
+                <i><b>Form: </b></i>
+                <input type="date" id="datePicker111" value="2022-01-01" name="formDatePicker">
+                <i><b>To: </b></i>
+                <input type="date" id="datePicker11" value="2022-01-01" name="toDatePicker">
+                <div id="error-message1" class="error-message-hidden"></div><br>
+                <br><button class="button-show-data">Show Data</button>
+            </form>
+        </div>
+
+
+        <div id="input-option-email" class="form-group col-md-15 hidden-input-option" style="text-align:center; font-size:200%;">
+            <form class="form-group col-md-15"  name="inputEmailForm" action="table" onsubmit="return validateForm('Email')">
+                <h2 style="text-align:center; color:SteelBlue; font-size: 40px">
+                    <strong>Enter the student's email to display their attendance details.</strong></h2><hr>
+                <input type="text" placeholder="Enter Email" name="email_search" style="font-size:35px">
+                <button type="submit" style="color:SteelBlue; font-size: 35px"><i class="fa fa-search"></i></button>
+                </form>
+        </div>
+
+
+
+
+        <div id="input-option-connection-type" class="connection-Type hidden-input-option">
+            <form class="form-group col-md-15" action="table"><br>
+                <h2 style="text-align:center; color:SteelBlue; font-size: 40px">
+                    <strong>Select the connection type.</strong></h2><hr> <br>
+                    <select name="connection-type" id="connection-type" class="connection-type">
+                        <option value="mobile" onclick="onSelect('mobile connection')">Mobile app</option>
+                      <option value="desktop" onclick="onSelect('desktop connection')">Desktop app</option>
+                    </select> <br><br><br>
+                <input type="submit" id="connType" value="Show Data" name="connection-type" class="button-show-data"/>
+            </form>
+        </div>
+    </div>
+
+    {% endblock %}

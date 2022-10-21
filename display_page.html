@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% block content %}
+
+<html>
+<head>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--  <link rel="stylesheet" type="text/css" href="styles.css" /> -->
+<style>
+    table{
+        text-align:center;
+        font-size:100%;
+        color:CornflowerBlue;
+        width:95%;
+        height:170px;
+        margin: 0px auto;
+      }
+        tr:nth-of-type(2n){
+            background-color: rgba(176,196,222, 0.2);
+        }
+
+.dropdown{
+        font-size: 30px;
+    }
+
+.optional_message{
+      text-align: center;
+      font-size: 40px;
+      color:RoyalBlue;
+      font-weight: bold;
+      text-decoration: underline;
+}
+
+ /* To Go Back button */
+.button {
+      border-radius: 15px;
+      background-color: DodgerBlue;
+      border: none;
+      color: white;
+      text-align: center;
+      font-size: 23px;
+      padding: 8px 16px;
+      width: 170px;
+      height:50px;
+      transition: all 0.5s;
+      cursor: pointer;
+      margin: auto;
+
+      position:relative;
+      left:1050px;
+    }
+    }
+.button span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+    }
+.button span:after {
+      content: '\00bb';
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      right: -20px;
+      transition: 0.5s;
+}
+
+.button:hover span {
+      padding-right: 25px;
+}
+
+.button:hover span:after {
+      opacity: 1;
+      right: 0;
+}
+
+.table-header{
+    cursor: pointer;
+}
+
+/* To Download and Home button */
+.btn {
+      border-radius: 15px;
+      background-color: DodgerBlue;
+      border: none;
+      color: white;
+      padding: 12px 12px;
+      cursor: pointer;
+      font-size: 20px;
+
+      position:relative;
+      left:50px;
+}
+
+.btn:hover {
+      background-color: RoyalBlue;
+}
+
+.custom-table-header{
+        font-weight: bold;
+        font-size:120%;
+        background-color: rgba(176,196,222, 0.2);
+        text-decoration: underline;
+}
+
+.title{
+    text-align:center;
+    font-size:350%;
+    color:RoyalBlue;
+    font-weight: bold;
+    text-decoration: underline;
+    font-style: italic;
+}
+
+.sort-info{
+  background-color: #e7f3fe;
+  border-left: 6px solid #2196F3;
+  left:100px;
+}
+</style>
+    <script>
+  function SortColumn(sortBy){
+    sortBy = '.'+ sortBy;
+    let myTable = document.getElementById("my-table");
+    let rows = Array.from(myTable.querySelectorAll('tr')).filter(row => row.querySelector(sortBy)).map(item => item.cloneNode(true));
+    numbersColumn = !isNaN(sortBy) ? true : false;
+    let sortedRows = [];
+    let sortOrder = "";
+    if (!numbersColumn){
+        sortOrder = myTable.querySelector(sortBy).parentNode.getAttribute("sortOrder") || "a_to_z"
+        const sort = (a, b) => a.querySelector(sortBy).firstChild.nodeValue.localeCompare(b.querySelector(sortBy).firstChild.nodeValue);
+        sortedRows = rows.sort((a, b) => sortOrder === "a_to_z" ? sort(a, b) : sort(b, a));
+    }
+    else{
+      sortOrder = myTable.querySelector(sortBy).parentNode.getAttribute("sortOrder") || "increase"
+      const sort = (a, b) => Number(a.querySelector(sortBy).firstChild.nodeValue.replace(" mins", "")) -
+                                  Number(b.querySelector(sortBy).firstChild.nodeValue.replace(" mins", ""));
+      sortedRows = rows.sort((a, b) => sortOrder === "increase" ? sort(a, b) : sort(b, a));
+    }
+    let sortedRowsIdx = 0;
+    myTable.querySelectorAll(sortBy).forEach(name => {
+        name.parentNode.replaceWith(sortedRows[sortedRowsIdx++]);
+    });
+
+    if (numbersColumn){
+        myTable.querySelector(sortBy).parentNode.setAttribute("sortOrder", sortOrder === "increase" ? "decrease" : "increase")
+    }
+    else{
+        myTable.querySelector(sortBy).parentNode.setAttribute("sortOrder", sortOrder === "a_to_z" ? "z_to_a" : "a_to_z")
+    }
+}
+    </script>
+
+<!--  <br><br><div> <p class="title">Meetings Data</p> </div> <hr> -->
+
+  <body>
+  <div><br><br><br><br>
+
+      <div class="col-md-3 mb-2">
+        <button class="btn" type="button" onclick="tableToCSV()">
+            <i class="fa fa-download"> </i> Download CSV
+        </button>
+    </div>
+
+      <div>
+        <button class="button" onclick="history.back()"><span><i class="fa fa-home">
+        </i> Go Back </span></button>
+      </div>
+
+    <br><br>
+
+    <!--<div><p style="position:relative; left:60px; font-size:200%;"> !--<i class="fa fa-sort-amount-desc"></i> ->
+          <i class="fa fa-unsorted" style="font-size:35px;color:RoyalBlue"></i><strong>To sort by column, click on column name.
+      </strong></p><br></div> -->
+
+      <div>
+          <p class="optional_message">{{ optional_message }}</p>
+      </div><br><br>
+
+      <div class="sort-info">
+        <p style="position:relative; left:60px; font-size:200%;">
+            <i class="fa fa-unsorted" style="font-size:30px;color:RoyalBlue"></i>
+            <strong>To sort by column, click on column name.</strong></p>
+      </div>
+  </div> <br>
+
+  <table class="table-bordered" id="my-table">
+    <thead>
+    <tbody style="text-align:center; font-size:150%;" >
+    <tr>
+        {% for i in range(0, number_columns) %}
+            <td class="table-header custom-table-header" onclick="SortColumn('{{unique_class[i]}}')">{{ headers[i] }}</td>
+        {% endfor %}
+    </tr>
+    </tbody>
+
+
+    <tbody style="text-align:center; color:black; font-size:150%;" >
+    {% for data in data_list %}
+        <tr>
+            {% for i in range(0, number_columns) %}
+            <td class="{{unique_class[i]}}">{{ data[i] }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+
+    <script type="text/javascript">
+        function tableToCSV() {
+            var csv_data = [];
+            var rows = document.getElementsByTagName('tr');
+            for (var r = 0; r < rows.length; r++) {
+                var cols = rows[r].querySelectorAll('td');
+                var csv_rows = [];
+                for (var c = 0; c < cols.length; c++) {
+                    csv_rows.push(cols[c].innerHTML);
+                }
+                csv_data.push(csv_rows.join(","));
+            }
+            csv_data = csv_data.join('\n');
+            downloadCSVFile(csv_data);
+        }
+
+        function downloadCSVFile(csv_data) {
+            CSVFile = new Blob([csv_data], {type: "text/csv"});
+            var temp_link = document.createElement('a');
+
+            // The name "attendance_data" is used as a default filename for the file to be saved.
+            // The user can enter any file name he wants in the displayed dialog window.
+            temp_link.download = "attendance_data.csv";
+            var url = window.URL.createObjectURL(CSVFile);
+            temp_link.href = url;
+            temp_link.style.display = "none";
+            document.body.appendChild(temp_link);
+            temp_link.click();
+            document.body.removeChild(temp_link);
+        }
+    </script>
+
+</body>
+</html>
+
+{% endblock %}
+
+
+
+
